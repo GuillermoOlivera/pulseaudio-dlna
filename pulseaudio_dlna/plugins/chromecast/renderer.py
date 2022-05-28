@@ -65,6 +65,7 @@ class ChromecastRenderer(pulseaudio_dlna.plugins.renderer.BaseRenderer):
     def _create_pychromecast(self):
         chromecast = pychromecast._get_chromecast_from_host(
             (self.ip, self.port, self.udn, self.model_name, self.name))
+        chromecast.wait()
         return chromecast
 
     def play(self, url=None, codec=None, artist=None, title=None, thumb=None):
@@ -178,13 +179,14 @@ class ChromecastRendererFactory(object):
 
     @classmethod
     def from_pychromecast(self, pychromecast):
+        pychromecast.wait()
         return ChromecastRenderer(
             name=pychromecast.name,
-            ip=pychromecast.host,
-            port=pychromecast.port,
+            ip=pychromecast.socket_client.host,
+            port=pychromecast.socket_client.port,
             udn='uuid:{}'.format(pychromecast.uuid),
             model_name=pychromecast.model_name,
             model_number=None,
             model_description=None,
-            manufacturer=pychromecast.device.manufacturer,
+            manufacturer=pychromecast.cast_info.manufacturer,
         )
