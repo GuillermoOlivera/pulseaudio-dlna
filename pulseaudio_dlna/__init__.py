@@ -16,12 +16,12 @@
 # along with pulseaudio-dlna.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pkg_resources
+import importlib
 
 from .utils import git
 
 try:
-    version = pkg_resources.get_distribution(__package__).version
+    version = importlib.metadata.version(__package__)
 except pkg_resources.DistributionNotFound:
     version = 'unknown'
 
